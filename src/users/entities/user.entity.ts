@@ -37,11 +37,8 @@ export class User {
     role:UserRole
 
 
-    @OneToOne( () => UserAddress, (address) => address.userId)
-    @JoinColumn()
-    addressId: number;
-
-
+    @JoinColumn({ name: 'addressId' }) // This sets the foreign key column in User table
+    address: UserAddress;
     cartId: number;
 
 

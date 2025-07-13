@@ -9,7 +9,7 @@ export class UserAddress {
     @Column({ length: 100 })
     district: string;
 
-    @OneToOne(() => User, (user) => user.addressId)
-    userId: User;
+    @OneToOne(() => User, (user) => user.address)
+    user: User;
 
 }

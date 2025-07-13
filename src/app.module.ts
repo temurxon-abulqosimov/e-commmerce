@@ -5,6 +5,7 @@ import { UsersModule } from './users/users.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { UserAddressModule } from './user-address/user-address.module';
 import { envVariables } from './config/env.variables';
+import { WishlistModule } from './wishlist/wishlist.module';
 
 console.log(`Database Host: ${envVariables.DB_PASSWORD}`);
 
@@ -21,7 +22,8 @@ console.log(`Database Host: ${envVariables.DB_PASSWORD}`);
       synchronize: true, // Note: set to false in production
       autoLoadEntities: true,
     }),
-    UserAddressModule
+    UserAddressModule,
+    WishlistModule
   ],
   controllers: [AppController],
   providers: [AppService],

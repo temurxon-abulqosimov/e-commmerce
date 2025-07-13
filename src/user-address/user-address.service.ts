@@ -16,13 +16,13 @@ export class UserAddressService {
     if (!user) {
       throw new Error(`User with id ${id} not found`);
     }
-    if (user.addressId) {
+    if (user.address) {
       throw new Error(`User with id ${id} already has an address`);
     }   
 
     const newAddress = this.userAddressRepo.create({
       ...createUserAddressDto, 
-    userId: {
+    user: {
       id 
     }});
 
@@ -43,39 +43,39 @@ export class UserAddressService {
   }
 
  async findOne(id: number, userId: number) {
-    const userAddress = await this.userAddressRepo.findOne({where : { userId: { id } }});
+    const userAddress = await this.userAddressRepo.findOne({where : { user: { id } }});
     if (!userAddress) {
       throw new Error(`User address with id ${id} not found for user ${userId}`);
     }
-    if (userAddress.userId.id !== userId) {
-      throw new Error(`User address with id ${userAddress.userId.id} does not belong to user ${userId}`);
+    if (userAddress.user.id !== userId) {
+      throw new Error(`User address with id ${userAddress.user.id} does not belong to user ${userId}`);
     }
     return userAddress;
   }
 
   async update(id: number, updateUserAddressDto: UpdateUserAddressDto, userId: number) {
-    const userAddress = await this.userAddressRepo.findOne({ where: { userId: { id } } });
+    const userAddress = await this.userAddressRepo.findOne({ where: { user: { id } } });
     if (!userAddress) {
       throw new Error(`User address with id ${id} not found`);
     }
-    if (userAddress.userId.id !== userId) {
-      throw new Error(`User address with id ${userAddress.userId.id} does not belong to user ${userId}`);
+    if (userAddress.user.id !== userId) {
+      throw new Error(`User address with id ${userAddress.user.id} does not belong to user ${userId}`);
     }
 
-    const updatedAddress = await this.userAddressRepo.update(userAddress, {...updateUserAddressDto, userId: { id: userId }});
+    const updatedAddress = await this.userAddressRepo.update(userAddress, {...updateUserAddressDto, user: { id: userId }});
     return {message: 'User address updated successfully', userAddress: updatedAddress};
   }
 
   async remove(id: number, userId : number) {
-    const userAddress = await this.userAddressRepo.findOne({ where: { userId: { id } } });
+    const userAddress = await this.userAddressRepo.findOne({ where: { user: { id } } });
     
     if (!userAddress) {
       throw new Error(`User address with id ${id} not found`);
     }
-    if (userAddress.userId.id !== userId) {
-      throw new Error(`User address with id ${userAddress.userId.id} does not belong to user ${userId}`);
+    if (userAddress.user.id !== userId) {
+      throw new Error(`User address with id ${userAddress.user.id} does not belong to user ${userId}`);
     }
-   await  this.userAddressRepo.delete({ userId: { id } });
+   await  this.userAddressRepo.delete({ user: { id } });
     return {messahe: `User address with id ${id} deleted successfully`};
   }
 }

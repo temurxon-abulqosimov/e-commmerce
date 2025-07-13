@@ -11,7 +11,7 @@ import { envVariables } from 'src/config/env.variables';
 export class UsersService {
   constructor(@InjectRepository(User) private   readonly  userRepo : Repository<User>) {}
   async create(createUserDto: CreateUserDto) {
-    const newUser = this.userRepo.create(createUserDto);
+    const newUser = this.userRepo.create({...createUserDto, address:{}});
     await this.userRepo.save(newUser);
     const token = jwt.sign(
       { sub: newUser.id}, 
@@ -60,7 +60,7 @@ export class UsersService {
     if(user.id !== id){
       throw new Error(`User id mismatch: expected ${id}, got ${user.id}`);
     }
-    await this.userRepo.update(id, updateUserDto);
+    await this.userRepo.update(id,{ ...updateUserDto, address:{}});
     return {message: `User with id ${id} updated successfully`};
   }
 
