@@ -1,6 +1,7 @@
 import { UserAddress } from "src/user-address/entities/user-address.entity";
 import { Column, Entity, JoinColumn, JoinTable, OneToOne, PrimaryGeneratedColumn } from "typeorm";
 import { UserRole } from "../dto/create-user.dto";
+import { Wishlist } from "src/wishlist/entities/wishlist.entity";
 
 export enum gender{
     Male='male',
@@ -42,7 +43,8 @@ export class User {
     cartId: number;
 
 
-    wishlistId: number;
+    @OneToOne(() => Wishlist, (wishlist) => wishlist.user)
+    wishlist: Wishlist;
 
 
     orderId: number;

@@ -15,7 +15,9 @@ export class WishlistService {
     }
     const newWishlist = this.wishlistRepo.create({
       ...createWishlistDto,
-      userId: userId,   
+      user:{
+        id: userId,
+      }   
     })
     await this.wishlistRepo.save(newWishlist);
     return  {message: 'Wishlist created successfully', wishlist: newWishlist};
@@ -40,7 +42,7 @@ async  findAll( userId: number, userRole: UserRole) {
     if (!wishlist) {
       return `Wishlist with id ${id} not found`;
     }
-    if(wishlist.userId !== userId) {
+    if(wishlist.user.id !== userId) {
       return 'This wishlist does not belong to the user';
     }
     if(userRole === UserRole.SELLER) {
@@ -55,7 +57,7 @@ async  findAll( userId: number, userRole: UserRole) {
     if (!wishlist) {
       return `Wishlist with id ${id} not found`;
     }
-    if(wishlist.userId !== userId) {
+    if(wishlist.user.id !== userId) {
       return 'This wishlist does not belong to the user';
     }
     const updatedWishlist = await this.wishlistRepo.update(id, updateWishlistDto);
@@ -70,7 +72,7 @@ async  findAll( userId: number, userRole: UserRole) {
     if (!wishlist) {
       return `Wishlist with id ${id} not found`;
     }
-    if(wishlist.userId !== userId) {
+    if(wishlist.user.id !== userId) {
       return 'This wishlist does not belong to the user';
     }
    await  this.wishlistRepo.delete(id);
