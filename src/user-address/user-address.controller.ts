@@ -12,7 +12,7 @@ export class UserAddressController {
   @Post()
   create(@Body() createUserAddressDto: CreateUserAddressDto, @Req() req) {
     const userId = req.user.id; 
-    return this.userAddressService.create(createUserAddressDto, +userId);
+    return this.userAddressService.create(createUserAddressDto, userId);
   }
 
   @Get()

@@ -13,6 +13,10 @@ export class WishlistController {
   create(@Body() createWishlistDto: CreateWishlistDto, @Req() req){
     const userId = req.user.id;
     const userRole = req.user.role;
+    // console.log(userId, userRole);
+    console.log(req.user);
+    
+    
     return this.wishlistService.create(createWishlistDto, userId, userRole);
   }
 

@@ -14,13 +14,13 @@ export class UsersService {
     const newUser = this.userRepo.create({...createUserDto, address:{}});
     await this.userRepo.save(newUser);
     const token = jwt.sign(
-      { sub: newUser.id}, 
+      { id: newUser.id, role: newUser.role }, 
      envVariables.JWT_SECRET,
       { expiresIn: '1h' }
     )
     
 
-    return {message: 'User created successfully', user: newUser};
+    return {message: 'User created successfully', user: newUser, token: token};
   }
 
   async findAll() {

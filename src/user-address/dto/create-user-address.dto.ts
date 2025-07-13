@@ -9,7 +9,5 @@ export class CreateUserAddressDto {
     @IsString()
     district: string;
     
-    @IsNumber()
-    @Type(() => Number)
-    userId: number;
+
 }

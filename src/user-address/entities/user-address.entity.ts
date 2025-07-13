@@ -1,7 +1,11 @@
 import { User } from "src/users/entities/user.entity";
-import { Column, OneToOne } from "typeorm";
+import { Column, Entity, OneToOne, PrimaryGeneratedColumn } from "typeorm";
 
+@Entity()
 export class UserAddress {
+
+    @PrimaryGeneratedColumn()
+    id: number;
 
     @Column({ length: 100 })
     region: string;

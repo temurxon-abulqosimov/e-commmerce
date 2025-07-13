@@ -10,7 +10,7 @@ import { Wishlist } from './entities/wishlist.entity';
 export class WishlistService {
   constructor(@InjectRepository(Wishlist) private   readonly  wishlistRepo : Repository<Wishlist>) {}
  async create(createWishlistDto: CreateWishlistDto, userId: number, userRole: UserRole ) {
-    if(userRole !== UserRole.USER) {
+    if(userRole != UserRole.USER) {
       return 'Only users can create a wishlist';
     }
     const newWishlist = this.wishlistRepo.create({

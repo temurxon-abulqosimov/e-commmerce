@@ -21,10 +21,11 @@ export class CreateUserDto {
     email: string;
 
 
+    @IsString()
     @Matches(/^\+?998([ -])?(90|91|93|94|95|98|99|33|97|71)([ -])?\d{3}([ -])?\d{2}([ -])?\d{2}$/, {
         message: 'Phone number must be a valid Uzbek number starting with +998',
     })
-    phone: string;
+    phoneNumber: string;
 
     @IsString()
     @IsOptional()

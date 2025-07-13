@@ -76,7 +76,7 @@ export class UserAddressService {
       throw new Error(`User address with id ${userAddress.user.id} does not belong to user ${userId}`);
     }
    await  this.userAddressRepo.delete({ user: { id } });
-    return {messahe: `User address with id ${id} deleted successfully`};
+    return {message: `User address with id ${id} deleted successfully`};
   }
 }
 
