@@ -1,0 +1,22 @@
+// src/orders/order.entity.ts
+import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, OneToMany, CreateDateColumn } from 'typeorm';
+import { User } from '../users/user.entity';
+import { OrderItem } from './order-item.entity';
+
+@Entity()
+export class Order {
+  @PrimaryGeneratedColumn()
+  id: number;
+
+  @CreateDateColumn()
+  createdAt: Date;
+
+  @Column({ default: 'pending' })
+  status: 'pending' | 'processing' | 'shipped' | 'delivered' | 'cancelled';
+
+  @ManyToOne(() => User, user => user.orders)
+  user: User;
+
+  @OneToMany(() => OrderItem, orderItem => orderItem.order, { cascade: true })
+  items: OrderItem[];
+}
