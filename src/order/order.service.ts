@@ -1,12 +1,11 @@
 // src/orders/orders.service.ts
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Order } from './order.entity';
+import { Order } from './entities/order.entity';
+import { CartItem } from 'src/cart-item/entities/cart-item.entity';
+import { OrderItem } from 'src/order-item/entities/order-item.entity';
 import { Repository } from 'typeorm';
-import { Cart } from '../cart/cart.entity';
-import { CartItem } from '../cart-item/cart-item.entity';
-import { OrderItem } from './order-item.entity';
-import { Product } from '../products/product.entity';
+import { Cart } from 'src/cart/entities/cart.entity';
 
 @Injectable()
 export class OrdersService {

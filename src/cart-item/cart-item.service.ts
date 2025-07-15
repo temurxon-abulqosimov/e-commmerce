@@ -1,20 +1,17 @@
 // src/cart-item/cart-item.service.ts
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { CartItem } from './cart-item.entity';
 import { Repository } from 'typeorm';
 import { CreateCartItemDto } from './dto/create-cart-item.dto';
 import { UpdateCartItemDto } from './dto/update-cart-item.dto';
-import { Product } from '../products/product.entity';
-import { Cart } from '../cart/cart.entity';
+import { CartItem } from './entities/cart-item.entity';
+import { Cart } from 'src/cart/entities/cart.entity';
 
 @Injectable()
 export class CartItemService {
   constructor(
     @InjectRepository(CartItem)
     private cartItemRepo: Repository<CartItem>,
-    @InjectRepository(Product)
-    private productRepo: Repository<Product>,
     @InjectRepository(Cart)
     private cartRepo: Repository<Cart>,
   ) {}
@@ -22,9 +19,6 @@ export class CartItemService {
   async addItem(userId: number, dto: CreateCartItemDto): Promise<CartItem> {
     const cart = await this.cartRepo.findOne({ where: { user: { id: userId } } });
     if (!cart) throw new NotFoundException('Cart not found');
-
-    const product = await this.productRepo.findOneBy({ id: dto.productId });
-    if (!product) throw new NotFoundException('Product not found');
 
     const existing = await this.cartItemRepo.findOne({
       where: { cart: { id: cart.id }, product: { id: dto.productId } },
@@ -35,7 +29,7 @@ export class CartItemService {
       return this.cartItemRepo.save(existing);
     }
 
-    const newItem = this.cartItemRepo.create({ cart, product, quantity: dto.quantity });
+    const newItem = this.cartItemRepo.create({ cart, quantity: dto.quantity });
     return this.cartItemRepo.save(newItem);
   }
 

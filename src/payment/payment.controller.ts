@@ -1,9 +1,9 @@
 // src/payments/payments.controller.ts
 import { Controller, Post, Patch, Get, Param, Body, UseGuards } from '@nestjs/common';
-import { PaymentsService } from './payments.service';
-import { JwtAuthGuard } from '../common/guards/jwt-auth.guard';
 import { CreatePaymentDto } from './dto/create-payment.dto';
 import { UpdatePaymentDto } from './dto/update-payment.dto';
+import { JwtAuthGuard } from 'src/guard/auth.guard';
+import { PaymentsService } from './payment.service';
 
 @Controller('payments')
 @UseGuards(JwtAuthGuard)

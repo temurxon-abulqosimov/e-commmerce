@@ -1,8 +1,8 @@
 // src/orders/orders.controller.ts
 import { Controller, Post, Get, Patch, Param, Body, Req, UseGuards } from '@nestjs/common';
-import { OrdersService } from './orders.service';
-import { JwtAuthGuard } from '../common/guards/jwt-auth.guard';
 import { Request } from 'express';
+import { JwtAuthGuard } from 'src/guard/auth.guard';
+import { OrdersService } from './order.service';
 
 @Controller('orders')
 @UseGuards(JwtAuthGuard)

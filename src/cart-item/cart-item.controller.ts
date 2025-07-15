@@ -3,8 +3,8 @@ import { Controller, Post, Patch, Delete, Body, Param, UseGuards, Req } from '@n
 import { CartItemService } from './cart-item.service';
 import { CreateCartItemDto } from './dto/create-cart-item.dto';
 import { UpdateCartItemDto } from './dto/update-cart-item.dto';
-import { JwtAuthGuard } from '../common/guards/jwt-auth.guard';
 import { Request } from 'express';
+import { JwtAuthGuard } from 'src/guard/auth.guard';
 
 @Controller('cart-items')
 @UseGuards(JwtAuthGuard)

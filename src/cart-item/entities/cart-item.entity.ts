@@ -1,7 +1,5 @@
-// src/cart-item/cart-item.entity.ts
+import { Cart } from 'src/cart/entities/cart.entity';
 import { Entity, PrimaryGeneratedColumn, Column, ManyToOne } from 'typeorm';
-import { Cart } from '../cart/cart.entity';
-import { Product } from '../products/product.entity';
 
 @Entity()
 export class CartItem {
@@ -13,7 +11,4 @@ export class CartItem {
 
   @ManyToOne(() => Cart, cart => cart.items, { onDelete: 'CASCADE' })
   cart: Cart;
-
-  @ManyToOne(() => Product, { eager: true, onDelete: 'CASCADE' })
-  product: Product;
 }
