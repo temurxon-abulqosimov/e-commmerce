@@ -4,10 +4,8 @@ import { AppService } from './app.service';
 import { ProductModule } from './product/product.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { CategoryModule } from './category/category.module';
-import { JwtModule } from '@nestjs/jwt';
 import { CommentModule } from './comment/comment.module';
 import { UsersModule } from './users/users.module';
-import { TypeOrmModule } from '@nestjs/typeorm';
 import { UserAddressModule } from './user-address/user-address.module';
 import { envVariables } from './config/env.variables';
 import { WishlistModule } from './wishlist/wishlist.module';
@@ -27,24 +25,7 @@ console.log(`Database Host: ${envVariables.DB_PASSWORD}`);
       synchronize: true, // Note: set to false in production
       autoLoadEntities: true,
       logging: true, // Enable logging for debugging
-      
     }),
-    UserAddressModule,
-    WishlistModule
-  ],
-  imports: [
-    TypeOrmModule.forRoot({
-      type: 'postgres',
-      host: 'localhost',
-      port: 5433,
-      username: 'postgres',
-      password: 'admin',
-      database: 'ecommerce',
-      autoLoadEntities: true,
-      synchronize: true,
-      logging: true,
-    }),
-
     JwtModule.register({
       global: true,
       secret: 'secret',
@@ -55,7 +36,10 @@ console.log(`Database Host: ${envVariables.DB_PASSWORD}`);
     
     CategoryModule,
     
-    CommentModule],
+    CommentModule,
+    UserAddressModule,
+    WishlistModule
+  ],
   controllers: [AppController],
   providers: [AppService],
 })

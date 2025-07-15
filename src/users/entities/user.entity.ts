@@ -1,7 +1,8 @@
 import { UserAddress } from "src/user-address/entities/user-address.entity";
-import { Column, Entity, JoinColumn, JoinTable, OneToOne, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, JoinColumn, JoinTable, OneToMany, OneToOne, PrimaryGeneratedColumn } from "typeorm";
 import { UserRole } from "../dto/create-user.dto";
 import { Wishlist } from "src/wishlist/entities/wishlist.entity";
+import { Product } from "src/product/entities/product.entity";
 
 export enum gender{
     Male='male',
@@ -44,6 +45,8 @@ export class User {
     @OneToOne(() => UserAddress, (address) => address.user, { eager: true }) // eager loading to automatically load address with user
     @JoinColumn({ name: 'addressId' }) // This sets the foreign key column in User table
     address: UserAddress;
+
+    
     cartId: number;
 
 
@@ -52,5 +55,8 @@ export class User {
 
 
     orderId: number;
+
+    @OneToMany( () => Product, (product) => product.user, { eager: true })
+    products: Product[];
     
 }
