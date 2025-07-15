@@ -27,8 +27,8 @@ import { envVariables } from 'src/config/env.variables';
   
       const token = authHeader.split(' ')[1];
       try {
-        const decoded = jwt.verify(token, envVariables.JWT_SECRET); // 👈 use env var in real projects
-        request.user = decoded; // 👈 attach decoded user to request
+        const decoded = jwt.verify(token, envVariables.JWT_SECRET); 
+        request.user = decoded; 
         return true;
       } catch (err) {
         throw new UnauthorizedException('Invalid or expired token');

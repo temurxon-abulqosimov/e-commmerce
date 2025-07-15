@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { CreateUserAddressDto } from './dto/create-user-address.dto';
 import { UpdateUserAddressDto } from './dto/update-user-address.dto';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -14,17 +14,19 @@ export class UserAddressService {
  async create(createUserAddressDto: CreateUserAddressDto, id: number) {
     const user = await this.userRepo.findOne({ where: { id: id } });
     if (!user) {
-      throw new Error(`User with id ${id} not found`);
+      throw new BadRequestException(`User with id ${id} not found`);
     }
     if (user.address) {
-      throw new Error(`User with id ${id} already has an address`);
+      throw new BadRequestException(`User with id ${id} already has an address`);
     }   
 
+    
     const newAddress = this.userAddressRepo.create({
       ...createUserAddressDto, 
     user: {
-      id 
+        id: id
     }});
+    
 
     await this.userAddressRepo.save(newAddress)
     return {message: 'User address created successfully', userAddress: newAddress}; 
@@ -32,11 +34,11 @@ export class UserAddressService {
 
  async findAll( id: number, role: string) {
     if (role !== 'admin') {
-      throw new Error('Only admins can view user addresses');
+      throw new BadRequestException('Only admins can view user addresses');
     }
     const userAddresses = await this.userAddressRepo.find();
     if (userAddresses.length === 0) {
-      throw new Error('No user addresses found');
+      throw new BadRequestException('No user addresses found');
     }
     return userAddresses;
 
@@ -45,10 +47,10 @@ export class UserAddressService {
  async findOne(id: number, userId: number) {
     const userAddress = await this.userAddressRepo.findOne({where : { user: { id } }});
     if (!userAddress) {
-      throw new Error(`User address with id ${id} not found for user ${userId}`);
+      throw new BadRequestException(`User address with id ${id} not found for user ${userId}`);
     }
     if (userAddress.user.id !== userId) {
-      throw new Error(`User address with id ${userAddress.user.id} does not belong to user ${userId}`);
+      throw new BadRequestException(`User address with id ${userAddress.user.id} does not belong to user ${userId}`);
     }
     return userAddress;
   }
@@ -56,10 +58,10 @@ export class UserAddressService {
   async update(id: number, updateUserAddressDto: UpdateUserAddressDto, userId: number) {
     const userAddress = await this.userAddressRepo.findOne({ where: { user: { id } } });
     if (!userAddress) {
-      throw new Error(`User address with id ${id} not found`);
+      throw new BadRequestException(`User address with id ${id} not found`);
     }
     if (userAddress.user.id !== userId) {
-      throw new Error(`User address with id ${userAddress.user.id} does not belong to user ${userId}`);
+      throw new BadRequestException(`User address with id ${userAddress.user.id} does not belong to user ${userId}`);
     }
 
     const updatedAddress = await this.userAddressRepo.update(userAddress, {...updateUserAddressDto, user: { id: userId }});
@@ -70,10 +72,10 @@ export class UserAddressService {
     const userAddress = await this.userAddressRepo.findOne({ where: { user: { id } } });
     
     if (!userAddress) {
-      throw new Error(`User address with id ${id} not found`);
+      throw new BadRequestException(`User address with id ${id} not found`);
     }
     if (userAddress.user.id !== userId) {
-      throw new Error(`User address with id ${userAddress.user.id} does not belong to user ${userId}`);
+      throw new BadRequestException(`User address with id ${userAddress.user.id} does not belong to user ${userId}`);
     }
    await  this.userAddressRepo.delete({ user: { id } });
     return {message: `User address with id ${id} deleted successfully`};

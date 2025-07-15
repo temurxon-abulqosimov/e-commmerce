@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -23,15 +23,34 @@ export class UsersService {
     return {message: 'User created successfully', user: newUser, token: token};
   }
 
+   async login(createUserDto) {
+    
+    const user = await this.userRepo.findOne({ where: { email: createUserDto.email} });
+    
+    if (!user || user.password != createUserDto.password) {
+      throw new BadRequestException('Invalid email or password');
+    }
+
+
+    const token = jwt.sign(
+      { id: user.id, role: user.role }, 
+      envVariables.JWT_SECRET,
+      { expiresIn: '1h' }
+    )
+
+    return {message: 'Login successful', user, token};
+  }
+
+
   async findAll() {
     const users = await this.userRepo.find();
     if (users.length === 0) {
-      throw new Error('No users found');
+      throw new BadRequestException('No users found');
     }
     
     const seller = users.filter(user => user.role === 'seller');
     if( seller.length === 0) {
-      throw new Error('No sellers found');
+      throw new BadRequestException('No sellers found');
     }
 
     return seller
@@ -41,7 +60,7 @@ export class UsersService {
     const user = await this.userRepo.findOne({ where: { id } });
 
     if (!user) {
-      throw new Error(`User with id ${id} not found`);
+      throw new BadRequestException(`User with id ${id} not found`);
     }
     if(user.role === 'seller')  {
       return user
@@ -55,10 +74,10 @@ export class UsersService {
  async  update(id: number, updateUserDto: UpdateUserDto) {
     const user = await this.userRepo.findOne({ where: { id } });
     if (!user) {
-      throw new Error(`User with id ${id} not found`);
+      throw new BadRequestException(`User with id ${id} not found`);
     }
     if(user.id !== id){
-      throw new Error(`User id mismatch: expected ${id}, got ${user.id}`);
+      throw new BadRequestException(`User id mismatch: expected ${id}, got ${user.id}`);
     }
     await this.userRepo.update(id,{ ...updateUserDto, address:{}});
     return {message: `User with id ${id} updated successfully`};
@@ -67,10 +86,10 @@ export class UsersService {
  async remove(id: number) {
     const user = await this.userRepo.findOne({ where: { id } });
     if (!user) {
-      throw new Error(`User with id ${id} not found`);
+      throw new BadRequestException(`User with id ${id} not found`);
     }
     if(user.id !== id){
-      throw new Error(`User id mismatch: expected ${id}, got ${user.id}`);
+      throw new BadRequestException(`User id mismatch: expected ${id}, got ${user.id}`);
     }
     await this.userRepo.delete(id);
 

@@ -26,6 +26,13 @@ export class CreateUserDto {
         message: 'Phone number must be a valid Uzbek number starting with +998',
     })
     phoneNumber: string;
+    
+
+    @IsString()
+    @Matches(/^(?=.*[A-Z])(?=.*\d)[A-Za-z\d]{8,}$/, {
+        message: 'Password must be at least 8 characters long, contain at least one uppercase letter and one number',
+    })
+    password: string;
 
     @IsString()
     @IsOptional()

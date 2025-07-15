@@ -21,6 +21,8 @@ console.log(`Database Host: ${envVariables.DB_PASSWORD}`);
       entities: [__dirname + '/**/*.entity{.ts,.js}'],
       synchronize: true, // Note: set to false in production
       autoLoadEntities: true,
+      logging: true, // Enable logging for debugging
+      
     }),
     UserAddressModule,
     WishlistModule

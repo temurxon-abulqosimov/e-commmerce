@@ -25,6 +25,9 @@ export class User {
     @Column({ unique: true })
     email: string;
 
+    @Column({ length: 100 }) // select false prevents password from being returned in queries
+    password: string;
+
     @Column({ unique: true })
     phoneNumber: string;
 
@@ -38,6 +41,7 @@ export class User {
     role:UserRole
 
 
+    @OneToOne(() => UserAddress, (address) => address.user, { eager: true }) // eager loading to automatically load address with user
     @JoinColumn({ name: 'addressId' }) // This sets the foreign key column in User table
     address: UserAddress;
     cartId: number;
