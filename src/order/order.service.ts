@@ -1,0 +1,77 @@
+// src/orders/orders.service.ts
+import { Injectable, NotFoundException } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Order, OrderStatus } from './entities/order.entity';
+import { CartItem } from 'src/cart-item/entities/cart-item.entity';
+import { OrderItem } from 'src/order-item/entities/order-item.entity';
+import { Repository } from 'typeorm';
+import { Cart } from 'src/cart/entities/cart.entity';
+
+
+@Injectable()
+export class OrdersService {
+  constructor(
+    @InjectRepository(Order)
+    private orderRepo: Repository<Order>,
+    @InjectRepository(OrderItem)
+    private orderItemRepo: Repository<OrderItem>,
+    @InjectRepository(Cart)
+    private cartRepo: Repository<Cart>,
+    @InjectRepository(CartItem)
+    private cartItemRepo: Repository<CartItem>,
+  ) {}
+
+  async createOrder(userId: number): Promise<Order> {
+    const cart = await this.cartRepo.findOne({
+      where: { user: { id: userId } },
+      relations: ['items', 'items.product'],
+    });
+
+    if (!cart || !cart.items.length) {
+      throw new NotFoundException('Cart is empty');
+    }
+
+    const order = this.orderRepo.create({
+      user: { id: userId },
+      items: cart.items.map((item) =>
+        this.orderItemRepo.create({
+          product: item.product,
+          quantity: item.quantity,
+        }),
+      ),
+      status: OrderStatus.PENDING,
+    });
+
+    const savedOrder = await this.orderRepo.save(order);
+    await this.cartItemRepo.remove(cart.items); // savatni tozalashga
+
+    return savedOrder;
+  }
+
+  async getMyOrders(userId: number): Promise<Order[]> {
+    return this.orderRepo.find({
+      where: { user: { id: userId } },
+      relations: ['items', 'items.product'],
+      order: { createdAt: 'DESC' },
+    });
+  }
+
+  async updateStatus(orderId: number, status: string, userId:number): Promise<Order> {
+    const order = await this.orderRepo.findOneBy({ id: orderId });
+    if( order?.user.id !== userId) {
+      throw new NotFoundException('You do not have permission to update this order');
+    }
+    if (!order) throw new NotFoundException('Order not found');
+    order.status = status as any;
+    return this.orderRepo.save(order);
+  }
+
+  async deleteOrder(orderId: number, userId:number): Promise<void> {
+    const order = await this.orderRepo.findOneBy({ id: orderId });
+    if( order?.user.id !== userId) {
+      throw new NotFoundException('You do not have permission to delete this order');
+    }
+    if (!order) throw new NotFoundException('Order not found');
+    await this.orderRepo.remove(order);
+  }
+}

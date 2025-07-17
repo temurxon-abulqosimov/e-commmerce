@@ -2,6 +2,7 @@ import { Injectable, CanActivate, ExecutionContext } from '@nestjs/common';
 import { Observable } from 'rxjs';
 import { JwtService } from '@nestjs/jwt';
 
+
 @Injectable()
 export class SellerAuthGuard implements CanActivate {
     constructor(private readonly jwtService: JwtService){}

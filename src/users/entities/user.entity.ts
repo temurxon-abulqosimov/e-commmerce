@@ -3,6 +3,9 @@ import { Column, Entity, JoinColumn, JoinTable, OneToMany, OneToOne, PrimaryGene
 import { UserRole } from "../dto/create-user.dto";
 import { Wishlist } from "src/wishlist/entities/wishlist.entity";
 import { Product } from "src/product/entities/product.entity";
+import { Order } from "src/order/entities/order.entity";
+import { Payment } from "src/payment/entities/payment.entity";
+import { Cart } from "src/cart/entities/cart.entity";
 
 export enum gender{
     Male='male',
@@ -47,16 +50,21 @@ export class User {
     address: UserAddress;
 
     
-    cartId: number;
+    @OneToOne(() => Cart, (cart) => cart.user) // eager loading to automatically load cart with user
+    cart: Cart;
 
 
     @OneToOne(() => Wishlist, (wishlist) => wishlist.user)
     wishlist: Wishlist;
 
 
-    orderId: number;
+    @OneToMany(() => Order, (order) => order.user, { eager: true }) // eager loading to automatically load orders with user
+    orders: Order[];
 
     @OneToMany( () => Product, (product) => product.user, { eager: true })
     products: Product[];
+
+    @OneToOne(() => Payment, (payment) => payment.user)
+    payment: Payment
     
 }

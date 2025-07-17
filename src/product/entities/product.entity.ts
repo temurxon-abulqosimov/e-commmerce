@@ -1,6 +1,9 @@
+import { CartItem } from "src/cart-item/entities/cart-item.entity";
 import { Category } from "src/category/entities/category.entity";
 import { Comment } from "src/comment/entities/comment.entity";
-import { Column, JoinTable, ManyToMany, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import { OrderItem } from "src/order-item/entities/order-item.entity";
+import { User } from "src/users/entities/user.entity";
+import { Column, JoinTable, ManyToMany, ManyToOne, OneToMany, OneToOne, PrimaryGeneratedColumn } from "typeorm";
 
 export class Product {
     @PrimaryGeneratedColumn()
@@ -33,4 +36,10 @@ export class Product {
 
     @ManyToOne(() => User, user => user.products)
     user : User
+
+    @OneToOne(() => CartItem, cartItem => cartItem.product, { eager: true })
+    cartItem: CartItem
+
+    @OneToMany(() => OrderItem, orderItem => orderItem.product )
+    orderItem: OrderItem[]
 }

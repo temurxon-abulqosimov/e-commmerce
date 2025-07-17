@@ -9,6 +9,7 @@ import { UsersModule } from './users/users.module';
 import { UserAddressModule } from './user-address/user-address.module';
 import { envVariables } from './config/env.variables';
 import { WishlistModule } from './wishlist/wishlist.module';
+import { JwtModule } from '@nestjs/jwt';
 
 console.log(`Database Host: ${envVariables.DB_PASSWORD}`);
 
